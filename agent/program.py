@@ -2,8 +2,8 @@
 # Project Part B: Game Playing Agent
 
 from referee.game import \
-    PlayerColor, Action, SpawnAction, SpreadAction, HexPos, HexDir
-from .boardupdate import update_board
+    PlayerColor, Action, SpawnAction, SpreadAction, HexPos, HexDir, Board
+
 
 
 # This is the entry point for your game playing agent. Currently the agent
@@ -28,23 +28,25 @@ class Agent:
                 self.action_list = [HexPos(4,4),HexPos(5,5),HexPos(6,6)]
 
         self._index = -1
-        self.state = {}
+        self.state = Board()
         
+
+
     def action(self, **referee: dict) -> Action:
         """
         Return the next action to take.
         """ 
-        
-
 
         match self._color:
             case PlayerColor.RED:
                 self._index += 1
+                self.state.apply_action(SpawnAction(self.action_list[self._index]))
                 return SpawnAction(self.action_list[self._index])
 
             case PlayerColor.BLUE:
                 self._index += 1
                 # This is going to be invalid... BLUE never spawned!
+                self.state.apply_action(SpawnAction(self.action_list[self._index]))
                 return SpawnAction(self.action_list[self._index])
 
     def turn(self, color: PlayerColor, action: Action, **referee: dict):
@@ -54,6 +56,7 @@ class Agent:
         match action:
             case SpawnAction(cell):
                 print(f"Testing: {color} SPAWN at {cell}")
+                
                 pass
             case SpreadAction(cell, direction):
                 print(f"Testing: {color} SPREAD from {cell}, {direction}")
