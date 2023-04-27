@@ -131,7 +131,7 @@ def spawn_convertor(pos:tuple)-> SpawnAction:
     pos = HexPos(r,q)
     return SpawnAction(pos)
 
-def can_spawn(board:dict[tuple: tuple]):
+def get_legal_spawn(board:dict[tuple: tuple]):
     can = []
     power = 0
     for value in board.values():
