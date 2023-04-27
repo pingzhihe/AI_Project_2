@@ -145,6 +145,23 @@ def get_legal_spawn(board:dict[tuple: tuple]):
     return can
 
 
+def get_legal_spread(turn:str, state: dict[tuple, tuple]):
+    spread_list = []
+    direction_list = [(1,-1),(-1,1),(1,0),(0,1),(0,-1),(-1,0)]
+    length = len(direction_list)
+    if turn == 'r':
+        for (r,q) in state:
+            if state[(r,q)][0] == 'r':
+                for i in range(length):
+                    t = direction_list[i]
+                    spread_list.append((r,q,t[0],t[1]))
+    else:
+        for (r,q) in state:
+            if state[(r,q)][0] == 'b': 
+                for i in range(length):
+                    t = direction_list[i]
+                    spread_list.append((r,q,t[0],t[1]))
+    return spread_list
 
 
 
