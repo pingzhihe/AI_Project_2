@@ -27,8 +27,8 @@ class Agent:
                 print("Testing: I am playing as blue")
                 self.action_list = [HexPos(4,4),HexPos(5,5),HexPos(6,6)]
 
-        self._index = -1
-        self.state = Board()
+        self.state = {}
+
         
 
 

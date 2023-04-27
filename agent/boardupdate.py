@@ -125,7 +125,7 @@ def spreadaction_convertor(action_tuple: tuple)->SpreadAction:
     print(dir)
     return (SpreadAction(pos,dir))
 
-def spawn_convertor(pos:tuple)-> SpawnAction:
+def spawnaction_convertor(pos:tuple)-> SpawnAction:
     r = pos[0]
     q = pos[1]
     pos = HexPos(r,q)
@@ -151,6 +151,6 @@ def get_legal_spawn(board:dict[tuple: tuple]):
 board = {(3,3):('b',6)}
 board = spread_board(board, (3,3,-1,1),'b')
 action_tuple = (3,3,1,-1)
-print(spreadaction_convertor(action_tuple))
+#print(spreadaction_convertor(action_tuple))
 #print(render_board(board,ansi=True))
 
