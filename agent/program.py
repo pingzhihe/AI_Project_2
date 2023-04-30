@@ -3,8 +3,9 @@
 
 from referee.game import \
     PlayerColor, Action, SpawnAction, SpreadAction, HexPos, HexDir, Board
-
-
+from .game_class import Game
+from .mcts import Node, monte_carlo_tree_search,take_action
+from .boardupdate import spawnaction_convertor, spreadaction_convertor,spread_convertor,spawn_convertor
 
 # This is the entry point for your game playing agent. Currently the agent
 # simply spawns a token at the centre of the board if playing as RED, and
@@ -18,16 +19,18 @@ class Agent:
         """
         Initialise the agent.
         """
+        self.game = Game()
         self._color = color
+
         match color:
             case PlayerColor.RED:
+                self.game.player = 'r'
                 print("Testing: I am playing as red")
-                self.action_list  = [HexPos(0,0),HexPos(1,1),HexPos(2,2)]
             case PlayerColor.BLUE:
+                self.game.player = 'b'
                 print("Testing: I am playing as blue")
-                self.action_list = [HexPos(4,4),HexPos(5,5),HexPos(6,6)]
+        self._index = 0
 
-        self.state = {}
 
         
 
@@ -36,29 +39,43 @@ class Agent:
         """
         Return the next action to take.
         """ 
-
         match self._color:
             case PlayerColor.RED:
-                self._index += 1
-                self.state.apply_action(SpawnAction(self.action_list[self._index]))
-                return SpawnAction(self.action_list[self._index])
-
+                self.game.player = 'r'
+                next_step = monte_carlo_tree_search(self.game, 1000)
+                action = next_step.game.action
+                print(self.game.state)
+                if len(action) == 2:
+                    return spawnaction_convertor(action)
+                else:
+                    return spreadaction_convertor(action)
             case PlayerColor.BLUE:
-                self._index += 1
-                # This is going to be invalid... BLUE never spawned!
-                self.state.apply_action(SpawnAction(self.action_list[self._index]))
-                return SpawnAction(self.action_list[self._index])
+                self.game.player = 'b'
+                next_step = monte_carlo_tree_search(self.game, 1)
+                action = next_step.game.action
+                print(self.game.state)
+                if len(action) == 2:
+                    return spawnaction_convertor(action)
+                else:
+                    return spreadaction_convertor(action)
+
+
 
     def turn(self, color: PlayerColor, action: Action, **referee: dict):
         """
         Update the agent with the last player's action.
         """
+
         match action:
             case SpawnAction(cell):
                 print(f"Testing: {color} SPAWN at {cell}")
+                action = spawn_convertor(cell)
+                self.game = take_action(action, self.game)
                 
                 pass
             case SpreadAction(cell, direction):
                 print(f"Testing: {color} SPREAD from {cell}, {direction}")
+                action = spread_convertor(direction, cell)
+                self.game = take_action(action, self.game)
                 pass
 

@@ -20,10 +20,10 @@ def spread_board(board:dict[tuple:tuple], action_list:tuple, color: str) -> dict
     power = -1
     r = action_list[0]
     q = action_list[1]
-    if (r,q) in new_board and board[(r,q)][0] == color:
+    if (r,q) in new_board and new_board[(r,q)][0] == color:
         power = new_board[(r,q)][1]
         del new_board[(r,q)]
-        for i in range(power):
+        for _ in range(power):
             r += action_list[2]
             q += action_list[3]
             if r == 7:
@@ -92,7 +92,7 @@ def spread_convertor(dir: HexDir, pos: HexPos) -> tuple:
         case HexDir.UpRight:
             dr = 1
             dq = 0
-        case HexDir.UpRight:
+        case HexDir.UpLeft:
             dr = 0
             dq = -1
         case HexDir.DownLeft:
@@ -103,6 +103,11 @@ def spread_convertor(dir: HexDir, pos: HexPos) -> tuple:
             dq = 1
 
     return (r,q,dr,dq)
+
+def spawn_convertor(pos:HexPos)-> tuple:
+    r =pos.r
+    q = pos.q
+    return (r,q)
 
 def spreadaction_convertor(action_tuple: tuple)->SpreadAction:
     r = action_tuple[0]
@@ -164,10 +169,4 @@ def get_legal_spread(turn:str, state: dict[tuple, tuple]):
     return spread_list
 
 
-
-board = {(3,3):('b',6)}
-board = spread_board(board, (3,3,-1,1),'b')
-action_tuple = (3,3,1,-1)
-#print(spreadaction_convertor(action_tuple))
-#print(render_board(board,ansi=True))
 
