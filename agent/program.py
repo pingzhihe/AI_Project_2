@@ -7,7 +7,7 @@ from .game_class import Game
 from .mcts import monte_carlo_tree_search, take_action
 from .boardupdate import spawnaction_convertor, \
     spreadaction_convertor,spread_convertor,spawn_convertor
-from .minmax import find_best_move
+from .top_k import find_best_move
 
 # This is the entry point for your game playing agent. Currently the agent
 # simply spawns a token at the centre of the board if playing as RED, and
