@@ -19,7 +19,7 @@ class SpawnAction():
     def __str__(self) -> str:
         return f"SPAWN({self.cell.r}, {self.cell.q})"
 
-
+   
 @dataclass(frozen=True, slots=True)
 class SpreadAction():
     cell: HexPos

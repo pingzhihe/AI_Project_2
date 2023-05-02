@@ -2,8 +2,12 @@
 # Project Part B: Game Playing Agent
 
 from referee.game import \
-    PlayerColor, Action, SpawnAction, SpreadAction, HexPos, HexDir
-
+    PlayerColor, Action, SpawnAction, SpreadAction
+from .game_class import Game
+from .mcts import monte_carlo_tree_search, take_action
+from .boardupdate import spawnaction_convertor, \
+    spreadaction_convertor,spread_convertor,spawn_convertor
+from .minmax import find_best_move
 
 # This is the entry point for your game playing agent. Currently the agent
 # simply spawns a token at the centre of the board if playing as RED, and
@@ -17,32 +21,65 @@ class Agent:
         """
         Initialise the agent.
         """
+
+        self.game = Game()
         self._color = color
+
         match color:
             case PlayerColor.RED:
+                self.game.player = 'r'
                 print("Testing: I am playing as red")
             case PlayerColor.BLUE:
+                self.game.player = 'b'
                 print("Testing: I am playing as blue")
+
+
+        
+
 
     def action(self, **referee: dict) -> Action:
         """
         Return the next action to take.
-        """
+        """ 
+
         match self._color:
             case PlayerColor.RED:
-                return SpawnAction(HexPos(3, 3))
+                self.game.player = 'r'
+                next_step = monte_carlo_tree_search(self.game, 1)
+                action = next_step.game.action
+                print(self.game.state)
+                if len(action) == 2:
+                    return spawnaction_convertor(action)
+                else:
+                    return spreadaction_convertor(action)
             case PlayerColor.BLUE:
-                # This is going to be invalid... BLUE never spawned!
-                return SpawnAction(HexPos(4, 4))
+                self.game.player = 'b'
+                action = find_best_move(self.game)
+                print(self.game.state)
+                if len(action) == 2:
+                    return spawnaction_convertor(action)
+                else:
+                    return spreadaction_convertor(action)
+
+
 
     def turn(self, color: PlayerColor, action: Action, **referee: dict):
         """
         Update the agent with the last player's action.
         """
+
         match action:
             case SpawnAction(cell):
                 print(f"Testing: {color} SPAWN at {cell}")
+                
+                action = spawn_convertor(cell)
+                self.game = take_action(action, self.game)
                 pass
+
             case SpreadAction(cell, direction):
                 print(f"Testing: {color} SPREAD from {cell}, {direction}")
+
+                action = spread_convertor(direction, cell)
+                self.game = take_action(action, self.game)
                 pass
+
