@@ -2,10 +2,12 @@
 # Project Part B: Game Playing Agent
 
 from referee.game import \
-    PlayerColor, Action, SpawnAction, SpreadAction, HexPos, HexDir, Board
+    PlayerColor, Action, SpawnAction, SpreadAction
 from .game_class import Game
-from .mcts import Node, monte_carlo_tree_search,take_action
-from .boardupdate import spawnaction_convertor, spreadaction_convertor,spread_convertor,spawn_convertor
+from .mcts import monte_carlo_tree_search, take_action
+from .boardupdate import spawnaction_convertor, \
+    spreadaction_convertor,spread_convertor,spawn_convertor
+from .minmax import find_best_move
 
 # This is the entry point for your game playing agent. Currently the agent
 # simply spawns a token at the centre of the board if playing as RED, and
@@ -19,6 +21,7 @@ class Agent:
         """
         Initialise the agent.
         """
+
         self.game = Game()
         self._color = color
 
@@ -29,7 +32,6 @@ class Agent:
             case PlayerColor.BLUE:
                 self.game.player = 'b'
                 print("Testing: I am playing as blue")
-        self._index = 0
 
 
         
@@ -39,10 +41,11 @@ class Agent:
         """
         Return the next action to take.
         """ 
+
         match self._color:
             case PlayerColor.RED:
                 self.game.player = 'r'
-                next_step = monte_carlo_tree_search(self.game, 1000)
+                next_step = monte_carlo_tree_search(self.game, 1)
                 action = next_step.game.action
                 print(self.game.state)
                 if len(action) == 2:
@@ -51,8 +54,7 @@ class Agent:
                     return spreadaction_convertor(action)
             case PlayerColor.BLUE:
                 self.game.player = 'b'
-                next_step = monte_carlo_tree_search(self.game, 1)
-                action = next_step.game.action
+                action = find_best_move(self.game)
                 print(self.game.state)
                 if len(action) == 2:
                     return spawnaction_convertor(action)
@@ -69,12 +71,14 @@ class Agent:
         match action:
             case SpawnAction(cell):
                 print(f"Testing: {color} SPAWN at {cell}")
+                
                 action = spawn_convertor(cell)
                 self.game = take_action(action, self.game)
-                
                 pass
+
             case SpreadAction(cell, direction):
                 print(f"Testing: {color} SPREAD from {cell}, {direction}")
+
                 action = spread_convertor(direction, cell)
                 self.game = take_action(action, self.game)
                 pass

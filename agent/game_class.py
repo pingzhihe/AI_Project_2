@@ -1,4 +1,5 @@
-from .boardupdate import get_legal_spawn, get_legal_spread
+from .boardupdate import get_legal_spawn, get_legal_spread, spawn_board, spread_board
+
 class Game:
     def __init__(self):
         self.state = {}
@@ -68,3 +69,18 @@ class Game:
             return 'b'
         else:
             return 'r'
+        
+
+def take_action(action: tuple, game: Game):
+    new_game = Game()
+
+    #A spawn action
+    if len(action) == 2:
+        new_game.state = spawn_board(game.state, action, game.turn)
+    #A spread action
+    else:
+        new_game.state = spread_board(game.state, action, game.turn)
+    new_game.action_count = game.action_count + 1
+    new_game.action = action
+    new_game.turn = game.switch_turn()
+    return new_game
