@@ -86,7 +86,7 @@ class Game:
 
 def take_action(action: tuple, game: Game):
     new_game = Game()
-
+    new_game.player = game.player
     #A spawn action
     if len(action) == 2:
         new_game.state = spawn_board(game.state, action, game.turn)

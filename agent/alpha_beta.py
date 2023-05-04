@@ -1,8 +1,9 @@
 from .game_class import Game, take_action
 
 def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
-    if depth == 0:
+    if depth == 0 or game.is_terminal():
         return evaluate(game, game.player)
+    
     if player == "MAX":
         best_score = float('-inf')
         for action in game.get_legal_action():

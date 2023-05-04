@@ -8,7 +8,9 @@ from .mcts import monte_carlo_tree_search, take_action
 from .boardupdate import spawnaction_convertor, \
     spreadaction_convertor,spread_convertor,spawn_convertor
 from .minmax import mx_find_best_move
-from .alpla_beta_tb import ab_find_best_move
+#from .alpla_beta_tb import ab_find_best_move
+from .alpha_beta import ab_find_best_move
+from .alpla_beta_tb import ab_find_best_move_tb
 
 # This is the entry point for your game playing agent. Currently the agent
 # simply spawns a token at the centre of the board if playing as RED, and
@@ -46,7 +48,7 @@ class Agent:
         match self._color:
             case PlayerColor.RED:
                 self.game.player = 'r'
-                action = ab_find_best_move(self.game, self.transposition_table)
+                action = ab_find_best_move_tb(self.game, self.transposition_table)
                 print(self.game.state)
                 if len(action) == 2:
                     return spawnaction_convertor(action)
@@ -56,7 +58,7 @@ class Agent:
                 
             case PlayerColor.BLUE:
                 self.game.player = 'b'
-                action = ab_find_best_move(self.game, self.transposition_table)
+                action = ab_find_best_move(self.game)
                 print(self.game.state)
                 if len(action) == 2:
                     return spawnaction_convertor(action)
