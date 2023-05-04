@@ -36,7 +36,7 @@ def find_best_move(game: Game, k: int = 3) -> tuple:
 
     for action in legal_actions:
         next_state = take_action(action, game)
-        score = aminimax(next_state, "MIN", depth=3, alpha=alpha, beta=beta)
+        score = aminimax(next_state, "MIN", depth=2, alpha=alpha, beta=beta)
 
         if len(top_k_scores) < k:
             heapq.heappush(top_k_scores, (score, action))

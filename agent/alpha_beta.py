@@ -24,14 +24,14 @@ def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
                 break
         return best_score
 
-def find_best_move(game: Game) -> tuple:
+def ab_find_best_move(game: Game) -> tuple:
     best_score = float('-inf')
     best_move = None
     alpha = float('-inf')
     beta = float('inf')
     for action in game.get_legal_action():
         next_state = take_action(action, game)
-        score = aminimax(next_state, "MIN", depth=3, alpha=alpha, beta=beta)
+        score = aminimax(next_state, "MIN", depth = 2, alpha=alpha, beta=beta)
         if score > best_score:
             best_score = score
             best_move = action

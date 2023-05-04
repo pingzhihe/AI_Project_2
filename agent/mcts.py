@@ -32,12 +32,14 @@ def reset_game(game: Game):
 
 
 class Node:
-    def __init__(self, game: Game, parent = None):
+    def __init__(self, game: Game, parent = None, transposition_table = None):
         self.game = game
         self.parent = parent
         self.children = []
         self.visits = 0
         self.score = 0
+        self.transposition_table = transposition_table or {}
+        self.transposition_table[game.get_hash()] = self    
     
     def is_fully_expanded(self) -> bool:
         return len(self.children) == len(self.game.get_legal_action())
@@ -54,7 +56,11 @@ class Node:
         return best_child
 
     def add_child(self, child_game: Game):
-        child = Node(child_game, self)
+        if child_game.get_hash() in self.transposition_table:
+            child = self.transposition_table[child_game.get_hash()]
+            child.parent = self
+        else:
+            child = Node(child_game, self, self.transposition_table)
         self.children.append(child)
         return child
     
@@ -63,7 +69,7 @@ class Node:
         self.score += result
 
 
-def monte_carlo_tree_search(game: Game, interations:int, exploration_constant = 1)->Node:
+def monte_carlo_tree_search(game: Game, interations:int, exploration_constant = 3)->Node:
     root = Node(game)
 
     for _ in range(interations):
