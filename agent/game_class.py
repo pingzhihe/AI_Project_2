@@ -1,5 +1,5 @@
 from .boardupdate import get_legal_spawn, get_legal_spread, spawn_board, spread_board
-
+import random
 class Game:
     def __init__(self):
         self.state = {}
@@ -31,6 +31,7 @@ class Game:
         spread_list = get_legal_spread(self.turn, self.state)
         spawn_list = get_legal_spawn(self.state)
         action_list = spawn_list + spread_list
+        random.shuffle(action_list)
         return action_list
     
     def is_terminal(self) ->bool:

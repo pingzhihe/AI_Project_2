@@ -2,26 +2,9 @@
 from referee.game import Board, SpawnAction, HexPos, SpreadAction, HexDir,Action
 from .boardupdate import spawn_board, spread_board,render_board, apply_ansi,\
     get_legal_spawn, get_legal_spread
-from .game_class import Game
+from .game_class import Game, take_action
 import random
 import math
-
-
-
-def take_action(action: tuple, game: Game):
-    new_game = Game()
-
-    #A spawn action
-    if len(action) == 2:
-        new_game.state = spawn_board(game.state, action, game.turn)
-    #A spread action
-    else:
-        new_game.state = spread_board(game.state, action, game.turn)
-    new_game.action_count = game.action_count + 1
-    new_game.action = action
-    new_game.turn = game.switch_turn()
-    return new_game
-
 
 
 def reset_game(game: Game):
@@ -29,8 +12,6 @@ def reset_game(game: Game):
     game.action_count = 0
     game.turn = 'r'
     
-
-
 class Node:
     def __init__(self, game: Game, parent = None, transposition_table = None):
         self.game = game
