@@ -25,7 +25,7 @@ def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
                 break
         return best_score
 
-def ab_find_best_move(game: Game) -> tuple:
+def ab_find_best_move_2(game: Game) -> tuple:
     best_score = float('-inf')
     best_move = None
     alpha = float('-inf')
@@ -39,12 +39,12 @@ def ab_find_best_move(game: Game) -> tuple:
         alpha = max(alpha, best_score)
     return best_move
 
-def evaluate(game: Game, player: str):
+def evaluate(game: Game, player: str) -> float:
     power_b = game.count_power('b')
     power_r = game.count_power('r')
     token_b = game.count_token('b')
     token_r = game.count_token('r')
     if player == 'r':
-        return power_r - power_b
+        return token_r - token_b
     else:
-        return power_b - power_r
+        return token_b - token_r
