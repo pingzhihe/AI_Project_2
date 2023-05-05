@@ -1,26 +1,30 @@
 from .game_class import Game, take_action
-
+import random
     
 def aminimax(game: Game, player: str, depth: int):
     if depth == 0:
         return evaluate(game, game.player)
     if player == "MAX":
         best_score = float('-inf')
-        for action in game.get_legal_action():
+        action_list = game.get_legal_action()
+        random.shuffle(action_list)
+        for action in action_list:
             next_state = take_action(action, game)
             score = aminimax(next_state, "MIN", depth - 1)
             best_score = max(best_score, score)
         return best_score
     else:
         best_score = float('inf')
-        for action in game.get_legal_action():
+        action_list = game.get_legal_action()
+        random.shuffle(action_list)
+        for action in action_list:
             next_state = take_action(action, game)
             score = aminimax(next_state, "MAX", depth - 1)
             best_score = min(best_score, score)
         return best_score
     
 
-def find_best_move(game: Game) -> tuple:
+def mx_find_best_move(game: Game) -> tuple:
     best_score = float('-inf')
     best_move = None
     for action in game.get_legal_action():

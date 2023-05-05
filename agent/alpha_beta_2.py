@@ -1,8 +1,9 @@
 from .game_class import Game, take_action
-import heapq
+
 def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
-    if depth == 0:
+    if depth == 0 or game.is_terminal():
         return evaluate(game, game.player)
+    
     if player == "MAX":
         best_score = float('-inf')
         for action in game.get_legal_action():
@@ -24,38 +25,26 @@ def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
                 break
         return best_score
 
-
-def find_best_move(game: Game, k: int = 3) -> tuple:
+def ab_find_best_move_2(game: Game) -> tuple:
     best_score = float('-inf')
     best_move = None
     alpha = float('-inf')
     beta = float('inf')
-
-    legal_actions = game.get_legal_action()
-    top_k_scores = []
-
-    for action in legal_actions:
+    for action in game.get_legal_action():
         next_state = take_action(action, game)
-        score = aminimax(next_state, "MIN", depth=2, alpha=alpha, beta=beta)
-
-        if len(top_k_scores) < k:
-            heapq.heappush(top_k_scores, (score, action))
-        else:
-            heapq.heappushpop(top_k_scores, (score, action))
-
-    while top_k_scores:
-        score, action = heapq.heappop(top_k_scores)
+        score = aminimax(next_state, "MIN", depth = 2, alpha=alpha, beta=beta)
         if score > best_score:
             best_score = score
             best_move = action
         alpha = max(alpha, best_score)
-
     return best_move
 
-def evaluate(game: Game, player: str):
+def evaluate(game: Game, player: str) -> float:
     power_b = game.count_power('b')
     power_r = game.count_power('r')
+    token_b = game.count_token('b')
+    token_r = game.count_token('r')
     if player == 'r':
-        return (power_r - power_b)
+        return token_r - token_b
     else:
-        return (power_b - power_r) 
+        return token_b - token_r

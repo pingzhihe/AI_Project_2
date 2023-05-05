@@ -1,8 +1,9 @@
 from .game_class import Game, take_action
 
 def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
-    if depth == 0:
+    if depth == 0 or game.is_terminal():
         return evaluate(game, game.player)
+    
     if player == "MAX":
         best_score = float('-inf')
         for action in game.get_legal_action():
@@ -24,14 +25,14 @@ def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
                 break
         return best_score
 
-def find_best_move(game: Game) -> tuple:
+def ab_find_best_move(game: Game) -> tuple:
     best_score = float('-inf')
     best_move = None
     alpha = float('-inf')
     beta = float('inf')
     for action in game.get_legal_action():
         next_state = take_action(action, game)
-        score = aminimax(next_state, "MIN", depth=3, alpha=alpha, beta=beta)
+        score = aminimax(next_state, "MIN", depth = 2, alpha=alpha, beta=beta)
         if score > best_score:
             best_score = score
             best_move = action
@@ -41,6 +42,8 @@ def find_best_move(game: Game) -> tuple:
 def evaluate(game: Game, player: str):
     power_b = game.count_power('b')
     power_r = game.count_power('r')
+    token_b = game.count_token('b')
+    token_r = game.count_token('r')
     if player == 'r':
         return power_r - power_b
     else:

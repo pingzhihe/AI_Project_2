@@ -1,5 +1,5 @@
 from .boardupdate import get_legal_spawn, get_legal_spread, spawn_board, spread_board
-
+import random
 class Game:
     def __init__(self):
         self.state = {}
@@ -15,6 +15,14 @@ class Game:
             if value[0] == color:
                 power += value[1]
         return power
+
+    def count_token(self, color: str)-> int:
+        token = 0
+        for value in self.state.values():
+            if value[0] == color:
+                token += 1
+        return token
+
     
     def get_legal_action(self)->list:
         action_list = []
@@ -22,7 +30,8 @@ class Game:
         spawn_list = []
         spread_list = get_legal_spread(self.turn, self.state)
         spawn_list = get_legal_spawn(self.state)
-        action_list = spread_list + spawn_list
+        action_list = spawn_list + spread_list
+        random.shuffle(action_list)
         return action_list
     
     def is_terminal(self) ->bool:
@@ -69,11 +78,16 @@ class Game:
             return 'b'
         else:
             return 'r'
+
+    
+    def get_hash (self):
+        return  hash(str(self.state))
+
         
 
 def take_action(action: tuple, game: Game):
     new_game = Game()
-
+    new_game.player = game.player
     #A spawn action
     if len(action) == 2:
         new_game.state = spawn_board(game.state, action, game.turn)
