@@ -81,7 +81,7 @@ class Game:
 
     
     def get_hash (self):
-        return  hash(str(self.state))
+        return hash(str(self.state))
 
         
 

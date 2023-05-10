@@ -50,7 +50,7 @@ class Node:
         self.score += result
 
 
-def monte_carlo_tree_search(game: Game, interations:int, exploration_constant = 3)->Node:
+def monte_carlo_tree_search(game: Game, interations:int, exploration_constant = 1) -> Game:
     root = Node(game)
 
     for _ in range(interations):
@@ -80,6 +80,6 @@ def monte_carlo_tree_search(game: Game, interations:int, exploration_constant = 
             node.update(result)
             node = node.parent
     
-    return root.get_best_child(exploration_constant)
+    return root.get_best_child(exploration_constant).game
 
 

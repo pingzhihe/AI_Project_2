@@ -53,7 +53,7 @@ def ab_find_best_move_tb(game: Game, transposition_table: dict) -> tuple:
     beta = float('inf')
     for action in game.get_legal_action():
         next_state = take_action(action, game)
-        score = aminimax(next_state, "MIN", depth = 2, alpha=alpha, beta=beta, transposition_table=transposition_table)
+        score = aminimax(next_state, "MIN", depth = 3, alpha=alpha, beta=beta, transposition_table=transposition_table)
         if score > best_score:
             best_score = score
             best_move = action
@@ -63,8 +63,6 @@ def ab_find_best_move_tb(game: Game, transposition_table: dict) -> tuple:
 def evaluate(game: Game, player: str):
     power_b = game.count_power('b')
     power_r = game.count_power('r')
-    token_b = game.count_token('b')
-    token_r = game.count_token('r')
     if player == 'r':
         return power_r - power_b
     else:

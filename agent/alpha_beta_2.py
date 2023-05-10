@@ -3,7 +3,6 @@ from .game_class import Game, take_action
 def aminimax(game: Game, player: str, depth: int, alpha: float, beta: float):
     if depth == 0 or game.is_terminal():
         return evaluate(game, game.player)
-    
     if player == "MAX":
         best_score = float('-inf')
         for action in game.get_legal_action():
@@ -42,9 +41,7 @@ def ab_find_best_move_2(game: Game) -> tuple:
 def evaluate(game: Game, player: str) -> float:
     power_b = game.count_power('b')
     power_r = game.count_power('r')
-    token_b = game.count_token('b')
-    token_r = game.count_token('r')
     if player == 'r':
-        return token_r - token_b
+        return power_r - power_b
     else:
-        return token_b - token_r
+        return power_b - power_r
